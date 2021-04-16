@@ -46,23 +46,18 @@ UserNT = namedtuple("UserNT", ["id", "name"])
 def create_user(id, name):
     return User(id, name)
 
-def is_named_tuple(ctor) -> bool:
-    return hasattr(ctor, "_fields")
 
 def get_params(ctor) -> list[str]:
-    # if hasattr(ctor, "_fields"):
-    if inspect.isfunction(ctor): #hasattr(ctor, '__code__'):
-        ic("function")
-        return ctor.__code__.co_varnames
-    elif is_named_tuple(ctor):
-        ic("NamedTuple")
-        return ctor._fields
-    elif inspect.isclass(ctor): #hasattr(ctor, '__init__'):
-        ic("class")
-        return get_params(ctor.__init__)[1:]
-    else:
-        ic(ctor)
-        return []
+    sig = inspect.signature(ctor)
+
+    params = [
+        # param.name
+        # for param in sig.parameters.values()
+        param
+        for param in sig.parameters
+    ]
+    ic(params)
+    return params
 
 def query(self, ctor, query, params = []):
     cur = con.cursor()
