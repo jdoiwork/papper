@@ -63,6 +63,8 @@ def query(self, ctor, query, params = []):
     cur = con.cursor()
     rows = cur.execute(q_select, params)
     column_names = list(map(lambda tp: tp[0], cur.description))
+    ic(column_names)
+
     var_names = get_params(ctor)
     for row in rows:
         record = dict(zip(column_names, row))
@@ -73,6 +75,7 @@ def query(self, ctor, query, params = []):
         yield ctor(**attrs)
 
 def test_query(con, ctor):
+    ic(ctor)
     rows = con.query(ctor, q_select)
 
     for row in rows:
@@ -99,10 +102,3 @@ with con:
 
     for ctor in cs:
         test_query(con, ctor)
-    # rows = con.query(User, q_select)
-    # # rows = con.query(UserC, q_select)
-    # # rows = con.query(create_user, q_select)
-
-    # for row in rows:
-    #     ic(row)
-        
